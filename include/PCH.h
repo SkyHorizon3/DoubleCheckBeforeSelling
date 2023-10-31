@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 // c
 #include <cassert>
@@ -105,13 +105,15 @@
 // winnt
 #include <ShlObj_core.h>
 
+#include <SimpleIni.h>
+
 using namespace std::literals;
 using namespace REL::literals;
 
-#define DLLEXPORT extern "C" [[maybe_unused]] __declspec(dllexport)
+#if _DEBUG
+#define DEBUG_LOG(logger, msg, ...) logger->info(msg, __VA_ARGS__)
+#else
+#define DEBUG_LOG(logger, msg, ...)
+#endif
 
-// Plugin
 #include "Plugin.h"
-
-// DKUtil
-#include "DKUtil/Logger.hpp"

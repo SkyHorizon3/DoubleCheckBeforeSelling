@@ -1,4 +1,5 @@
 #pragma once
+#include "Globals.h"
 
 namespace CheckBeforeSelling
 {
@@ -33,7 +34,7 @@ namespace CheckBeforeSelling
 			SellingConfirmHandler(const RE::GFxValue& a_oldFunc) :
 				oldFunc_{ a_oldFunc } {}
 
-			// override (RE::GFxFunctionHandler)
+			//override (RE::GFxFunctionHandler)
 			void Call(RE::GFxFunctionHandler::Params& a_params) override;
 
 		private:
@@ -42,9 +43,9 @@ namespace CheckBeforeSelling
 
 		static void InstallHook()
 		{
-			REL::Relocation<std::uintptr_t> Vtbl{ VTABLE[0] };
+			REL::Relocation<std::uintptr_t> Vtbl{ RE::VTABLE_BarterMenu[0] };
 			func = Vtbl.write_vfunc(0x2, &Hook_PostCreate);
-			INFO("Hook BarterMenu!");
+			g_Logger->info("Hook BarterMenu!");
 		}
 
 		static ItemType GetItemType(RE::ItemList::Item* a_item);

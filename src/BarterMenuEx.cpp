@@ -1,6 +1,5 @@
-#include "BarterMenuEx.h"
-#include "MessageBox.h"
-#include "Settings.h"
+#include "../include/BarterMenuEx.h"
+#include "../include/MessageBox.h"
 
 namespace CheckBeforeSelling
 {
@@ -8,17 +7,18 @@ namespace CheckBeforeSelling
 	{
 		func(this);
 
-		RE::GFxValue oldFunc, func;
-		bool success = this->root.GetMember("onItemSelect", &oldFunc);
+		RE::GFxValue oldFunc, funct;
+		bool success = this->GetRuntimeData().root.GetMember("onItemSelect", &oldFunc);
 		assert(success);
 
 		auto impl_1 = RE::make_gptr<ItemSelectHandler>(oldFunc);
-		this->uiMovie->CreateFunction(&func, impl_1.get());
-		this->root.SetMember("onItemSelect", func);  //Replace Vanilla Method
+		this->uiMovie->CreateFunction(&funct, impl_1.get());
+		this->GetRuntimeData().root.SetMember("onItemSelect", funct);  //Replace Vanilla Method
 
 		auto impl_2 = RE::make_gptr<SellingConfirmHandler>(oldFunc);
-		this->uiMovie->CreateFunction(&func, impl_2.get());
-		this->root.SetMember("Maxsu_OnSellingConfirm", func);
+		this->uiMovie->CreateFunction(&funct, impl_2.get());
+		this->GetRuntimeData().root.SetMember("Maxsu_OnSellingConfirm", funct);
+
 	}
 
 	void BarterMenuEx::SellingConfirmHandler::Call(RE::GFxFunctionHandler::Params& a_params)
@@ -30,17 +30,21 @@ namespace CheckBeforeSelling
 	{
 		RE::UI* ui = RE::UI::GetSingleton();
 		auto menu = ui->GetMenu<RE::BarterMenu>();
+
 		if (!menu) {
-			ERROR("BarterMenu Not Found!");
+			g_Logger->error("BarterMenu Not Found!");
 			return;
 		}
 
-		if (menu->IsViewingVendorItems()) {
+		/*
+		if (menu->IsViewingVendorItems())
+		{
 			oldFunc_.Invoke("call", a_params.retVal, a_params.argsWithThisRef, a_params.argCount + 1);
 			return;
 		}
+		*/
 
-		auto selectedItem = menu->itemList->GetSelectedItem();
+		auto selectedItem = menu->GetRuntimeData().itemList->GetSelectedItem();
 		auto itemType = GetItemType(selectedItem);
 		if (selectedItem && itemType != ItemType::kNone && selectedItem->data.GetEnabled()) {
 			RE::GFxValue keyboardOrMouse;
@@ -54,16 +58,18 @@ namespace CheckBeforeSelling
 					if (a_result == 0) {
 						RE::GFxValue obj;
 						menu->uiMovie->CreateObject(&obj);
-						obj.SetMember("entry", menu->itemList->GetSelectedItem()->obj);
+						obj.SetMember("entry", menu->GetRuntimeData().itemList->GetSelectedItem()->obj);
 						RE::GFxValue keyboardOrMouse;
 						keyboardOrMouse.SetNumber(keyboardOrMouseVal);
 						obj.SetMember("keyboardOrMouse", keyboardOrMouse);
-						menu->root.Invoke("Maxsu_OnSellingConfirm", nullptr, &obj, 1);
-					} else {
-						menu->itemList->Update();
+						menu->GetRuntimeData().root.Invoke("Maxsu_OnSellingConfirm", nullptr, &obj, 1);
+					}
+					else {
+						menu->GetRuntimeData().itemList->Update();
 					}
 				});
-		} else {
+		}
+		else {
 			oldFunc_.Invoke("call", a_params.retVal, a_params.argsWithThisRef, a_params.argCount + 1);
 		}
 	}
@@ -84,7 +90,7 @@ namespace CheckBeforeSelling
 			default:
 				return "";
 			}
-		};
+			};
 
 		std::string translationKey = GetTranslationKey(a_type);
 		if (translationKey.empty()) {
@@ -94,7 +100,8 @@ namespace CheckBeforeSelling
 		std::string result;
 		if (SKSE::Translation::Translate(translationKey, result)) {
 			return result;
-		} else {
+		}
+		else {
 			return "Invaild Translation String: " + translationKey;
 		}
 	}
@@ -105,12 +112,11 @@ namespace CheckBeforeSelling
 			return ItemType::kNone;
 		}
 
-		auto settings = CBS_Settings::GetSingleton();
-		if (a_item->data.GetEquipState() > 0 && settings->EnableCheckForEquipped) {
+		if (a_item->data.GetEquipState() > 0 && EnableCheckForEquipped) {
 			return ItemType::kEquipped;
 		}
 
-		if (a_item->data.GetFavorite() && settings->EnableCheckForFavourited) {
+		if (a_item->data.GetFavorite() && EnableCheckForFavourited) {
 			return ItemType::kFavorite;
 		}
 
@@ -126,10 +132,10 @@ namespace CheckBeforeSelling
 			}
 
 			return false;
-		};
+			};
 
 		auto entryObj = a_item->data.objDesc;
-		if (settings->EnableCheckForUnique && entryObj && HasExtraEnchanmtment(entryObj)) {
+		if (EnableCheckForUnique && entryObj && HasExtraEnchanmtment(entryObj)) {
 			return ItemType::kUnique;
 		}
 

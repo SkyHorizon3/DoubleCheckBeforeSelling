@@ -1,12 +1,11 @@
 {
+  "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
   "name": "doublecheckbeforeselling",
   "version-string": "1.0.0",
-  "description": "",
-  "license": "MIT",
-  "dependencies": ["spdlog"],
-  "features": {
-    "mo2-install": {
-      "description": "Double Check Before Selling"
-    }
-  }
+  "dependencies": [
+    "commonlibsse-ng",
+    "simpleini",
+    "nlohmann-json",
+    "tomlplusplus"
+  ]
 }
