@@ -9,7 +9,10 @@ namespace CheckBeforeSelling
 
 		RE::GFxValue oldFunc, funct;
 		bool success = this->GetRuntimeData().root.GetMember("onItemSelect", &oldFunc);
-		assert(success);
+		if (!success)
+		{
+			g_Logger->critical("success is {}. Plugin won't work.", success);
+		}
 
 		auto impl_1 = RE::make_gptr<ItemSelectHandler>(oldFunc);
 		this->uiMovie->CreateFunction(&funct, impl_1.get());
