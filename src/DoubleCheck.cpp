@@ -1,4 +1,4 @@
-﻿#include "../include/Main.h"
+﻿#include "../include/DoubleCheck.h"
 #include "../include/Globals.h"
 #include "../include/BarterMenuEx.h"
 
@@ -45,6 +45,10 @@ void MessageListener(SKSE::MessagingInterface::Message* message)
 		CheckBeforeSelling::BarterMenuEx::InstallHook();
 	}
 	break;
+
+	default:
+		break;
+
 	}
 }
 

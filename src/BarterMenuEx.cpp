@@ -39,13 +39,13 @@ namespace CheckBeforeSelling
 			return;
 		}
 
-		/*
+
 		if (menu->IsViewingVendorItems())
 		{
 			oldFunc_.Invoke("call", a_params.retVal, a_params.argsWithThisRef, a_params.argCount + 1);
 			return;
 		}
-		*/
+
 
 		auto selectedItem = menu->GetRuntimeData().itemList->GetSelectedItem();
 		auto itemType = GetItemType(selectedItem);

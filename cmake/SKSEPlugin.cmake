@@ -60,7 +60,9 @@ if (CMAKE_GENERATOR MATCHES "Visual Studio")
 endif()
 
 # Find required packages (adjust as needed)
-find_package(CommonLibSSE CONFIG REQUIRED)
+#https://github.com/max-su-2019/CommonLibSSE
+add_subdirectory($ENV{CommonLibSSEPath} CommonLibSSE)
+
 find_package(spdlog CONFIG REQUIRED)
 
 # Include directories and libraries

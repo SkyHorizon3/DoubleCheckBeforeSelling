@@ -1,11 +1,14 @@
 {
   "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
   "name": "doublecheckbeforeselling",
-  "version-string": "1.0.0",
+  "version-string": "1.0.1",
   "dependencies": [
-    "commonlibsse-ng",
     "simpleini",
     "nlohmann-json",
-    "tomlplusplus"
+    "tomlplusplus",
+    "spdlog",
+    "rsm-binary-io",
+    "xbyak",
+    "rapidcsv"
   ]
 }
