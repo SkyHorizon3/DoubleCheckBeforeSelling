@@ -41,7 +41,7 @@ void MessageListener(SKSE::MessagingInterface::Message* message)
 	{
 	case SKSE::MessagingInterface::kDataLoaded:
 	{
-		//SKSE::Translation::ParseTranslation(Plugin::NAME.data());
+		SKSE::Translation::ParseTranslation(Plugin::NAME.data());
 		CheckBeforeSelling::BarterMenuEx::InstallHook();
 	}
 	break;
