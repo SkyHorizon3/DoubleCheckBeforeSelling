@@ -33,6 +33,7 @@ namespace CheckBeforeSelling
 	{
 		RE::UI* ui = RE::UI::GetSingleton();
 		auto menu = ui->GetMenu<RE::BarterMenu>();
+		RE::GFxValue result;
 
 		if (!menu) {
 			g_Logger->error("BarterMenu Not Found!");
@@ -40,12 +41,11 @@ namespace CheckBeforeSelling
 		}
 
 
-		if (menu->IsViewingVendorItems())
+		if (menu->GetRuntimeData().root.Invoke("isViewingVendorItems", &result) && result.GetBool())
 		{
 			oldFunc_.Invoke("call", a_params.retVal, a_params.argsWithThisRef, a_params.argCount + 1);
 			return;
 		}
-
 
 		auto selectedItem = menu->GetRuntimeData().itemList->GetSelectedItem();
 		auto itemType = GetItemType(selectedItem);

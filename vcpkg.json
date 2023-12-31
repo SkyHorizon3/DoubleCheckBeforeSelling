@@ -4,11 +4,10 @@
   "version-string": "1.0.1",
   "dependencies": [
     "simpleini",
-    "nlohmann-json",
-    "tomlplusplus",
+    "fmt",
     "spdlog",
-    "rsm-binary-io",
-    "xbyak",
+    "directxtk",
+    "catch2",
     "rapidcsv"
   ]
 }

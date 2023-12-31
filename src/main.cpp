@@ -1,8 +1,7 @@
-﻿#include "../include/DoubleCheck.h"
-#include "../include/Globals.h"
+﻿#include "../include/Globals.h"
 #include "../include/BarterMenuEx.h"
 
-void Main::SetupLog()
+void SetupLog()
 {
 	auto logsFolder = SKSE::log::log_directory();
 	if (!logsFolder)
@@ -20,7 +19,7 @@ void Main::SetupLog()
 	spdlog::flush_on(spdlog::level::trace);
 }
 
-void Main::LoadINI()
+void LoadINI()
 {
 	CSimpleIniA ini;
 	ini.SetUnicode(false);
@@ -52,20 +51,15 @@ void MessageListener(SKSE::MessagingInterface::Message* message)
 	}
 }
 
-void Main::Setup()
+SKSEPluginLoad(const SKSE::LoadInterface* skse)
 {
+	SKSE::Init(skse);
+
 	SetupLog();
 	LoadINI();
 	SKSE::GetMessagingInterface()->RegisterListener(MessageListener);
 
 	g_Logger->info("{} v{} loaded", Plugin::NAME, Plugin::VERSION);
-}
-
-SKSEPluginLoad(const SKSE::LoadInterface* skse)
-{
-	SKSE::Init(skse);
-	Main plugin;
-	plugin.Setup();
 
 	return true;
 }
